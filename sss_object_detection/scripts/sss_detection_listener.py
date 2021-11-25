@@ -202,30 +202,25 @@ class sss_detection_listener:
         msg.goal_tolerance = 2
         self.waypoint_pub.publish(msg)
         print(type(Waypoint_x))
-        print('\n Publishing waypoint: {}'.format(msg))
-        with open('/home/zheng/logdata/waypointdata{}.txt'.format(self.counter),"a") as f:
-            f.write('{}\t{}\n'.format(msg.waypoint_pose.pose.position.x,msg.waypoint_pose.pose.position.y))
-        f.close()   
-        with open('/home/zheng/logdata/Current_posedata{}.txt'.format(self.counter),"a") as f:
-            f.write('{}\t{}\n'.format(self.current_pose.pose.position.x,self.current_pose.pose.position.y))
-        f.close()
-        with open('/home/zheng/logdata/auv_yawdata{}.txt'.format(self.counter),"a") as f:
-            f.write('{}\n'.format(auv_yaw))
-        f.close() 
-        with open('/home/zheng/logdata/ropeX_data{}.txt'.format(self.counter),"a") as f:
-            f.write('{}\n'.format(X))
-        f.close()  
-        with open('/home/zheng/logdata/ropeY_data{}.txt'.format(self.counter),"a") as f:
-            f.write('{}\n'.format(y))
-        f.close() 
-        with open('/home/zheng/logdata/line_data{}.txt'.format(self.counter),"a") as f:
-            f.write('{}\t{}\n'.format(float(m_slope),float(c_intercept)))
-        f.close() 
-
-        
-    
-
-
+        # print('\n Publishing waypoint: {}'.format(msg))
+        # with open('/home/zheng/logdata/waypointdata{}.txt'.format(self.counter),"a") as f:
+        #     f.write('{}\t{}\n'.format(msg.waypoint_pose.pose.position.x,msg.waypoint_pose.pose.position.y))
+        # f.close()   
+        # with open('/home/zheng/logdata/Current_posedata{}.txt'.format(self.counter),"a") as f:
+        #     f.write('{}\t{}\n'.format(self.current_pose.pose.position.x,self.current_pose.pose.position.y))
+        # f.close()
+        # with open('/home/zheng/logdata/auv_yawdata{}.txt'.format(self.counter),"a") as f:
+        #     f.write('{}\n'.format(auv_yaw))
+        # f.close() 
+        # with open('/home/zheng/logdata/ropeX_data{}.txt'.format(self.counter),"a") as f:
+        #     f.write('{}\n'.format(X))
+        # f.close()  
+        # with open('/home/zheng/logdata/ropeY_data{}.txt'.format(self.counter),"a") as f:
+        #     f.write('{}\n'.format(y))
+        # f.close() 
+        # with open('/home/zheng/logdata/line_data{}.txt'.format(self.counter),"a") as f:
+        #     f.write('{}\t{}\n'.format(float(m_slope),float(c_intercept)))
+        # f.close() 
 def main():
     rospy.init_node('sss_detection_listener', anonymous=True)
     rospy.Rate(5)  # ROS Rate at 5Hz
