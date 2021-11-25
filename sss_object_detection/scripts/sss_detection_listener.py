@@ -2,7 +2,7 @@
 from sklearn import linear_model
 import rospy
 from sss_object_detection.consts import ObjectID
-from tf.transformations import euler_from_quaternion
+#from tf.transformations import euler_from_quaternion
 import tf2_py
 from vision_msgs.msg import ObjectHypothesisWithPose, Detection2DArray, Detection2D
 import tf2_ros
@@ -29,18 +29,22 @@ class sss_detection_listener:
         self.odom_sub = rospy.Subscriber(
             '/{}/dr/odom'.format(robot_name), Odometry,
             self.update_pose)
+        self.yaw_sub = rospy.Subscriber(
+            '/{}/dr/yaw'.format(robot_name), Float64, self.raw)
+        
 
         self.detection_topic = '/{}/payload/sidescan/detection_hypothesis'.format(
             robot_name)
         self.detection_sub = rospy.Subscriber(self.detection_topic, Detection2DArray,
                                          self.detection_callback)
-        self.waypoint_topic = '/{}/ctrl/goto_waypoint'.format(robot_name)#/{}/algae_farm/enable
+        self.waypoint_topic = '/{}/algae_farm/wp'.format(robot_name)#/sam/algae_farm/wp
         self.waypoint_topic_type = GotoWaypoint #ROS topic type
         self.waypoint_pub = rospy.Publisher(self.waypoint_topic, self.waypoint_topic_type,
                 queue_size=5)
         self.counter=1
         self.enable_pub = rospy.Publisher('/sam/algae_farm/enable', Bool, queue_size=1)
         self.enable = Bool()
+        self.enable.data = False
         print(self.waypoint_topic)
 
     def wait_for_transform(self, from_frame, to_frame):
@@ -55,6 +59,10 @@ class sss_detection_listener:
                 print('Failed to transform. Error: {}'.format(error))
         return trans
 
+    def raw(self,msg):
+        self.rawr=float(msg.data)
+        #print('rawr = {} .\n'.format(self.rawr))
+        
     def transform_pose(self, pose, from_frame, to_frame):
         trans = self.wait_for_transform(from_frame=from_frame,
                                          to_frame=to_frame)
@@ -84,7 +92,7 @@ class sss_detection_listener:
             object_pose = self.transform_pose(object_pose, from_frame=object_frame_id, to_frame=to_frame)
 
             if object_id == ObjectID.ROPE.value:
-                print('1')
+                #print('1')
                 # print('Detected rope at frame {}, pose {}, with confidence {}'.format(
                 #     object_frame_id, object_pose, detection_confidence))
                 # Do whatever you want to do
@@ -160,9 +168,10 @@ class sss_detection_listener:
         # get pose of SAM
         x_auv=self.current_pose.pose.position.x
         y_auv=self.current_pose.pose.position.y
-        auv_yaw_r = euler_from_quaternion([self.current_pose.pose.orientation.x, self.current_pose.pose.orientation.y,
-                                                self.current_pose.pose.orientation.z, self.current_pose.pose.orientation.w])[2]
-        auv_yaw=auv_yaw_r*180/math.pi
+        # auv_yaw_r = euler_from_quaternion([self.current_pose.pose.orientation.x, self.current_pose.pose.orientation.y,
+        #                                         self.current_pose.pose.orientation.z, self.current_pose.pose.orientation.w])[2]
+
+        auv_yaw=self.rawr*180/math.pi
                 #caulate waypoint
               
         if m_slope<20 and m_slope>-20:
@@ -209,8 +218,8 @@ class sss_detection_listener:
         self.enable.data = True
         self.enable_pub.publish(self.enable)
 
-        print(type(Waypoint_x))
-        print('\n Publishing waypoint: {}'.format(msg))
+        # print(type(Waypoint_x))
+        # print('\n Publishing waypoint: {}'.format(msg))
         # with open('/home/zheng/logdata/waypointdata{}.txt'.format(self.counter),"a") as f:
         #     f.write('{}\t{}\n'.format(msg.waypoint_pose.pose.position.x,msg.waypoint_pose.pose.position.y))
         # f.close()   
