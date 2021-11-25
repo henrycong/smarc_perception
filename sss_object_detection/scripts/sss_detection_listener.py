@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 from sklearn import linear_model
 import rospy
 from sss_object_detection.consts import ObjectID
