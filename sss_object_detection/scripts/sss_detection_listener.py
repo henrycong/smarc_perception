@@ -14,6 +14,8 @@ import numpy as np
 from sklearn.linear_model import LinearRegression, RANSACRegressor
 import math
 
+from std_msgs.msg import Float64, Header, Bool, Empty
+
 
 class sss_detection_listener:
     def __init__(self, robot_name):
@@ -32,11 +34,13 @@ class sss_detection_listener:
             robot_name)
         self.detection_sub = rospy.Subscriber(self.detection_topic, Detection2DArray,
                                          self.detection_callback)
-        self.waypoint_topic = '/{}/ctrl/goto_waypoint'.format(robot_name)
+        self.waypoint_topic = '/{}/ctrl/goto_waypoint'.format(robot_name)#/{}/algae_farm/enable
         self.waypoint_topic_type = GotoWaypoint #ROS topic type
         self.waypoint_pub = rospy.Publisher(self.waypoint_topic, self.waypoint_topic_type,
                 queue_size=5)
         self.counter=1
+        self.enable_pub = rospy.Publisher('/sam/algae_farm/enable', Bool, queue_size=1)
+        self.enable = Bool()
         print(self.waypoint_topic)
 
     def wait_for_transform(self, from_frame, to_frame):
@@ -201,8 +205,12 @@ class sss_detection_listener:
         msg.waypoint_pose.header.stamp = rospy.Time(0)
         msg.goal_tolerance = 2
         self.waypoint_pub.publish(msg)
+        
+        self.enable.data = True
+        self.enable_pub.publish(self.enable)
+
         print(type(Waypoint_x))
-        # print('\n Publishing waypoint: {}'.format(msg))
+        print('\n Publishing waypoint: {}'.format(msg))
         # with open('/home/zheng/logdata/waypointdata{}.txt'.format(self.counter),"a") as f:
         #     f.write('{}\t{}\n'.format(msg.waypoint_pose.pose.position.x,msg.waypoint_pose.pose.position.y))
         # f.close()   
