@@ -139,8 +139,8 @@ class sss_detection_listener:
         maximum = np.max(Xr)
         minimum = np.min(Xr)
         #print('maximum:{}'.format(maximum))
-        max_xindex = np.where(Xr==maximum)
-        min_xindex = np.where(Xr==minimum)
+        max_xindex = np.where(Xr==maximum)[0]
+        min_xindex = np.where(Xr==minimum)[0]
         print('max_xindex:{}'.format(max_xindex[0]))
         m_slope=(yr[max_xindex[0]]-yr[min_xindex[0]])/(Xr[max_xindex[0]]-Xr[min_xindex[0]])
         c_intercept=yr[max_xindex[0]]-m_slope*Xr[max_xindex[0]]
