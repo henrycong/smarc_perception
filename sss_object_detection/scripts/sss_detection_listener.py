@@ -3,7 +3,7 @@ from sklearn import linear_model
 import rospy
 from sss_object_detection.consts import ObjectID
 #from tf.transformations import euler_from_quaternion
-import tf2_py
+#import tf2_py
 from vision_msgs.msg import ObjectHypothesisWithPose, Detection2DArray, Detection2D
 import tf2_ros
 import tf2_geometry_msgs
