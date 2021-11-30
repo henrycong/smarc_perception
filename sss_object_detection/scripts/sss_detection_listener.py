@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from sklearn import linear_model
 import rospy
 from sss_object_detection.consts import ObjectID
@@ -211,8 +211,15 @@ class sss_detection_listener:
         msg.waypoint_pose.pose.position.x = float(Waypoint_x)
         msg.waypoint_pose.pose.position.y = float(Waypoint_y)
         #msg.waypoint_pose = self.rope_pose[-1]
-        msg.waypoint_pose.header.stamp = rospy.Time(0)
+        msg.travel_depth = -1
         msg.goal_tolerance = 2
+        msg.z_control_mode = GotoWaypoint.Z_CONTROL_DEPTH
+        #msg.speed_control_mode = GotoWaypoint.SPEED_CONTROL_RPM
+        #msg.travel_rpm = 1000
+        msg.speed_control_mode = GotoWaypoint.SPEED_CONTROL_SPEED
+        msg.travel_speed = 1.0
+
+        msg.waypoint_pose.header.stamp = rospy.Time(0)
         self.waypoint_pub.publish(msg)
         
         self.enable.data = True
