@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2.7
 from sklearn import linear_model
 import rospy
 from sss_object_detection.consts import ObjectID
@@ -220,7 +220,8 @@ class sss_detection_listener:
         msg.travel_speed = 1.0
 
         msg.waypoint_pose.header.stamp = rospy.Time(0)
-        self.waypoint_pub.publish(msg)
+        if self.counter % 10 == 0:
+            self.waypoint_pub.publish(msg)
         
         self.enable.data = True
         self.enable_pub.publish(self.enable)
